@@ -14,7 +14,7 @@ exp_sufix = 'bhvOpto';          % from Bruce et al 2023
 load(sprintf('trials_%s.mat',exp_sufix));
 
 %% plotting settings
-plotindividualanimals = 0;
+plotindividualanimals = false;
 
 %% parse meta data
 
@@ -68,9 +68,9 @@ category_clrs = [...
     ];
 
 % manipulation
-d1_clr = rgb('dodgerblue');
-d2_clr = rgb('crimson');
-ctrl_clr = rgb('darkslategray');
+d1_clr = [.1,.5,1];
+d2_clr = [.85,.05,.25];
+ctrl_clr = [.2,.3,.3];
 manipulation_clrs = [...
     ctrl_clr;...
     d1_clr;...
