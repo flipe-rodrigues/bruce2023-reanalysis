@@ -3,19 +3,18 @@
 clear;
 clc;
 
-%% load data
-sufix = 'bhvOpto';
-% sufix = 'bhvPharm';
-% sufix = 'bhvPharmSex';
-load(sprintf('trials_%s.mat',sufix));
+%% select & load behavioral data 
+
+% experiment selection (uncomment the one to plot)
+exp_sufix = 'bhvOpto';
+% exp_sufix = 'bhvPharm';
+% exp_sufix = 'bhvPharmSex';
+
+% load data
+load(sprintf('trials_%s.mat',exp_sufix));
 
 %% plotting settings
 plotindividualanimals = 0;
-
-%% data pre-selection
-% group_flags = arrayfun(@(x) contains(x,'control','ignorecase',true),...
-%     string(trials.group));
-% trials = trials(group_flags,:);
 
 %% parse meta data
 
@@ -268,7 +267,9 @@ if plotindividualanimals
             
             % plot response time raster
             plotresponseraster(sp_raster_port,...
-                selected_trials,'port',port_clrs);
+                selected_trials,...
+                'port',...
+                port_clrs);
             
             %% response time raster (conditioned on & sorted by choice category)
             
@@ -287,8 +288,10 @@ if plotindividualanimals
             
             % plot response time raster
             plotresponseraster(sp_raster_category,...
-                selected_trials,'category',category_clrs);
-            
+                selected_trials,...
+                'category',...
+                category_clrs);
+
             %% response time raster (conditioned on & sorted by manipulation)
             
             % trial selection
@@ -308,11 +311,15 @@ if plotindividualanimals
             
             % plot response time raster
             plotresponseraster(sp_raster_category_opto,...
-                selected_trials,'category',category_clrs);
+                selected_trials,...
+                'category',...
+                category_clrs);
             
-            % plot raster bands
-            plotrasterbands(sp_raster_category_opto,...
-                selected_trials,'manipulation',manipulation_clrs);
+            % plot nominal stimulus durations
+            plotnominalintervals(sp_raster_category_opto,...
+                selected_trials,...
+                'manipulation',...
+                manipulation_clrs);
             
             %% response rates (conditioned on choice port)
             
@@ -470,7 +477,6 @@ if plotindividualanimals
                 group_flags & ...
                 animal_flags & ...
                 trials.reward.flag & ...
-                ...~isnan(trials.switch.late.departure) & ...
                 trials.interval == max(intervals);
             selected_trials = trials(trial_flags,:);
             
@@ -767,11 +773,15 @@ for gg = 1 : group_count
     
     % plot response time raster
     plotresponseraster(sp_raster,...
-        selected_trials,'category',category_clrs);
+        selected_trials,...
+        'category',...
+        category_clrs);
     
-    % plot raster bands
-    plotrasterbands(sp_raster,...
-        selected_trials,'manipulation',manipulation_clrs);
+    % plot nominal stimulus durations
+    plotnominalintervals(sp_raster,...
+        selected_trials,...
+        'manipulation',...
+        manipulation_clrs);
 
     %% performance (conditioned on manipulation condition)
     
@@ -1077,7 +1087,6 @@ function plotresponseraster(ax,...
 
 % fetch relevant trial data
 trial_idcs = (1 : size(selected_trials,1))';
-trial_intervals = selected_trials.interval;
 
 % fetch relevant response data
 response_times = vertcat(selected_trials.responses.time{:});
@@ -1121,18 +1130,10 @@ for kk = 1 : condition_count
         'linestyle','-',...
         'linewidth',.1);
 end
-
-% plot intervals
-plot(ax,...
-    trial_intervals,trial_idcs,...
-    'color','k',...
-    'marker','.',...
-    'markersize',5,...
-    'linestyle','none');
 end
 
-%% plotting functions: raster bands
-function plotrasterbands(ax,...
+%% plotting functions: nominal intervals
+function plotnominalintervals(ax,...
     selected_trials,...
     condition_label,...
     condition_clrs)
