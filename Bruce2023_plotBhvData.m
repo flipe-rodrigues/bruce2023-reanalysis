@@ -6,9 +6,9 @@ clc;
 %% select & load behavioral data 
 
 % experiment selection (uncomment the one to plot)
-exp_sufix = 'bhvOpto';
-% exp_sufix = 'bhvPharm';
-% exp_sufix = 'bhvPharmSex';
+exp_sufix = 'bhvOpto';          % from Bruce et al 2023
+% exp_sufix = 'bhvPharm';       % from Bruce et al 2023
+% exp_sufix = 'bhvPharmSex';    % from Stutt et al 2024
 
 % load data
 load(sprintf('trials_%s.mat',exp_sufix));
